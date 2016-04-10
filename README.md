@@ -1,8 +1,8 @@
-# DictionaryTokenizer
+# DictionaryKeywordExtractor
 
-Given a txt dictionary, this api can help you to find out these words in a given text.
+Given a txt dictionary, this api can help you to extract that dictionary keywords from an input text.
 
-EXAMPLE: (given a english-nouns.txt file):
+EXAMPLE: (given a english-nouns.txt input file):
 Input: are there any doctors in the hospital this evening?
 Output as Set<Token>: 
 
