@@ -1,21 +1,15 @@
 package com.dsncode.scala
 
-import com.dsncode.java.JavaDemo
+import java.io.File
 
-object ScalaDemo {
+import com.dsncode.nlp.analyser.Dictionary
+
+object ScalaDemo extends App{
   
-  
-  def isPair(value : Int): Boolean ={
-    return value%2==0;
-  }
-  
-  def main(args : Array[String]) : Unit = {
-  
-    val dic = new Dictionary("/home/daniel/dics/nounlist.txt");
+    val dic = Dictionary.getInstance(new File("/home/daniel/dics/nounlist.txt"), "english-nouns");
     println(dic.countDictionaryWords())
     
     val nouns = dic.findNouns("hola amigo underwear")
     println("nouns: "+nouns)
-  }
   
 }

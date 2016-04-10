@@ -2,23 +2,22 @@ package com.demo.java;
 import java.io.File;
 import java.util.Set;
 
-import com.dsncode.scala.Dictionary;
+import com.dsncode.nlp.analyser.Dictionary;
+import com.dsncode.nlp.analyser.bean.Token;
 
+/**
+ * @author daniel silva navarro
+ * web www.dsncode.com
+ */
 public class JavaDemo {
 
-	
-	public static String reverse(String text)
-	{
-		return new StringBuilder(text).reverse().toString();
-	}
 	public static void main(String[] args) {
 
-		Dictionary dic = new Dictionary("./src/main/resources/nounlist.txt");
-		
-		int x = 0;
-		int fail =0;
-		Set<String> set = dic.findNouns("he is an actor and he does not use underwear");
-		System.out.println("found nouns: "+set);
+		String text = "are there any doctors in the hospital this evening?";
+		Dictionary dic = Dictionary.getInstance(new File("src/main/resources/nounlist.txt"),"english-nouns");
+		Set<Token> set = dic.findNouns(text);
+		System.out.println("input: "+text);
+		System.out.println("found: "+set);
 		
 	}
 
