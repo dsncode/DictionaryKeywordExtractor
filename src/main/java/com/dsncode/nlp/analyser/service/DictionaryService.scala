@@ -1,4 +1,4 @@
-package com.dsncode.nlp.analyser
+package com.dsncode.nlp.analyser.service
 
 import java.io.File
 import scala.io.Source
@@ -10,12 +10,6 @@ import com.dsncode.nlp.exception.NotFoundException
 /**
  * @author daniel silva navarro
  * web www.dsncode.com
- */
-/**
- * @param path
- */
-/**
- * @param path
  */
 class Dictionary private (path : File, classification : String) {
  
