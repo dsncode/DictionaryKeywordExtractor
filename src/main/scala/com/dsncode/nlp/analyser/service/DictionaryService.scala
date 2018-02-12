@@ -1,8 +1,10 @@
 package com.dsncode.nlp.analyser.service
 
 import java.io.File
+
 import scala.io.Source
-import java.util.HashSet
+import java.util.{HashSet, ResourceBundle}
+
 import scala.util.matching.Regex
 import com.dsncode.nlp.analyser.bean.Token
 import com.dsncode.nlp.exception.NotFoundException
@@ -59,21 +61,15 @@ class Dictionary private (path : File, classification : String) {
 
 object Dictionary
 {
-  
-def getInstance(path : File , classification : String) = 
-  {
-    val dic= new Dictionary(path, classification)
-    dic; 
-  }
 
-def main(args : Array[String])
-{
-  val dic = Dictionary.getInstance(new File("src/main/resources/nounlist.txt"), "english-nouns");
-    println(dic.countDictionaryWords())
-    
-    val nouns = dic.findNouns("are there any doctors in the hospital this evening?")
-    println("nouns: "+nouns)
-  }
+  val resource = ResourceBundle.getBundle("keywords");
 
+  def getInstance() : Dictionary = getInstance(new File(resource.getString("default.dictionary.list")),"english-nouns")
+
+  def getInstance(path : File , classification : String) =
+    {
+      val dic= new Dictionary(path, classification)
+      dic;
+    }
 
 }
