@@ -71,7 +71,7 @@ class Dictionary private (path : File, classification : String) {
   }
 }
 
-object Dictionary
+object DictionaryService
 {
 
   val resource = ResourceBundle.getBundle("keywords");
