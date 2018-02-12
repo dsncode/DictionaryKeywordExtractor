@@ -8,6 +8,8 @@ import java.util.{HashSet, ResourceBundle}
 import scala.util.matching.Regex
 import com.dsncode.nlp.analyser.bean.Token
 import com.dsncode.nlp.exception.NotFoundException
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, Promise}
 
 /**
  * @author daniel silva navarro
@@ -31,31 +33,41 @@ class Dictionary private (path : File, classification : String) {
   
   private def load(file: File) : Set[String]=
   {
-    if(!isValidSourceFile(file))
-    {
-      throw new NotFoundException("file path does not exists "+file.getAbsoluteFile);
-    }
-    
-    val start = System.currentTimeMillis()
-    val dic = Source.fromFile(file).getLines().toSet
-    val end = System.currentTimeMillis();
-    println("dic '"+this.classification+"' words:["+dic.size+"] loaded! in "+(end-start)+"ms")
-    dic
+
+      if (!isValidSourceFile(file))
+        throw new NotFoundException("file path does not exists " + file.getAbsoluteFile);
+
+      val start = System.currentTimeMillis()
+      val dic = Source.fromFile(file).getLines().toSet
+      val end = System.currentTimeMillis();
+      println("dic '" + this.classification + "' words:[" + dic.size + "] loaded! in " + (end - start) + "ms")
+      dic
+
   }
    
   private def isValidSourceFile(file : File) : Boolean = if(file==null || !file.exists() || file.isDirectory()) return false; else return true;
   
   def countDictionaryWords() = if(dic!=null) dic.size else 0
   
-  def findNouns(text : String) ={
-    
-    var ans = dic.toStream.par.filter { noun => 
-      val pattern = noun.r
-      val op = pattern.findFirstIn(text);
-      val ans = op.nonEmpty
-      ans
-    }.map { value => new Token(value,this.classification) }.seq
-    scala.collection.convert.WrapAsJava.setAsJavaSet(ans.toSet)
+  def findNouns(text : String) : Future[List[Token]] = {
+
+    val p = Promise[List[Token]]
+
+    Future {
+
+      val ans = dic.toStream.par.filter { noun =>
+        val pattern = noun.r
+        val op = pattern.findFirstIn(text);
+        val ans = op.nonEmpty
+        ans
+      }
+        .map { value => new Token(value, this.classification) }
+        .toList
+
+      p.success(ans)
+    }
+
+    p.future
   }
 }
 
